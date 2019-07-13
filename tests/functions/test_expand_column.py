@@ -26,6 +26,7 @@ def test_expand_and_concat():
     )
     assert df.shape[1] == 8
 
+
 @pytest.mark.functions
 def test_expand_dropfirst():
     data = {
@@ -37,7 +38,8 @@ def test_expand_dropfirst():
         column_name="col1", sep=", ", concat=False, drop_first=True
     )
     assert df.shape[1] == 5
-    assert 'A' not in df.columns
+    assert "A" not in df.columns
+
 
 @pytest.mark.functions
 def test_expand_concat_dropfirst():
@@ -50,4 +52,4 @@ def test_expand_concat_dropfirst():
         column_name="col1", sep=", ", concat=True, drop_first=True
     )
     assert df.shape[1] == 7
-    assert 'A' not in df.columns
+    assert "A" not in df.columns
