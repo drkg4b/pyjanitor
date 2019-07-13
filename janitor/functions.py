@@ -662,7 +662,7 @@ def fill_empty(
 @pf.register_dataframe_method
 @deprecated_alias(column="column_name")
 def expand_column(
-    df: pd.DataFrame, column_name, sep: str, concat: bool = True
+    df: pd.DataFrame, column_name, sep: str, concat: bool = True, drop_first: bool = False
 ) -> pd.DataFrame:
     """
     Expand a categorical column with multiple labels into dummy-coded columns.
@@ -693,14 +693,27 @@ def expand_column(
     :param bool concat: Whether to return the expanded column concatenated to
         the original dataframe (`concat=True`), or to return it standalone
         (`concat=False`).
-    :returns: A pandas DataFrame with an expanded column.
+    :param drop_first: Whether to get k-1 dummies out of k categorical
+        levels by removing the first level.
+
+    :returns: A pandas DataFrame with an expanded column.    
     """
+    
     expanded_df = df[column_name].str.get_dummies(sep=sep)
     if concat:
-        df = df.join(expanded_df)
-        return df
+        if drop_first:
+            df = df.join(expanded_df.iloc[:, 1:])
+            return df
+        
+        else:
+            df = df.join(expanded_df)
+            return df
     else:
-        return expanded_df
+        if drop_first:
+            return expanded_df.iloc[:, 1:]
+        else:
+            return expanded_df
+
 
 
 @pf.register_dataframe_method
